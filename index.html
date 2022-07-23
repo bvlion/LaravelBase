@@ -1,0 +1,189 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<style type="text/css">
+	* {
+		font-family: tahoma, verdana, sans-serif;
+		font-size: 96%;
+	}
+	a {
+		text-decoration: none;
+	}
+	a:hover {
+		text-decoration: underline;
+	}
+	h3, h4 {
+		padding: 1em 0 0.5em;
+	}
+	table {
+		width: 100%;
+		border-collapse: collapse;
+	}
+	table#high-level {
+		width: auto;
+	}
+	table tr {
+		vertical-align: top;
+	}
+	table td, table th {
+		padding: 0.2em 1em 0.3em 1em;
+	}
+	table th {
+		text-align: left;
+	}
+	table tr.top {
+		background-color: #dddddd;
+		border-bottom: 2px solid #000000;
+	}
+	table tr.test-file {
+		margin-top: 0.2em;
+		font-weight: bold;
+		background-color: #eeeeee;
+		border-top: 1px solid #666666;
+	}
+	table tr.test-file th {
+		padding-top: 0.5em;
+	}
+	table tr.single-test th {
+		padding-left: 3em;
+	}
+	table#summary td {
+		border-left: 1px solid #cccccc;
+		border-right: 1px solid #cccccc;
+	}
+	table td.nr {
+		text-align: center;
+	}
+	table td.time {
+		text-align: right;
+	}
+	.pass {
+		color: #999999;
+		background-color: #C1FFC1;
+	}
+	.failed {
+		background-color: #FFDAB9;
+	}
+	.errored {
+		background-color: #FFB8BA;
+	}
+	.fail, .fail-lot {
+		color: #FFFFEE;
+		background-color: #C51F1F;
+		font-weight: bold;
+	}
+	.fail-some {
+		color: #FFFFEE;
+		background-color: #FFB90F;
+		font-weight: bold;
+	}
+	.very-bad-time {
+		background-color: #FA8072;
+		font-weight: bold;
+	}
+	.bad-time {
+		background-color: #FFA54F;
+	}
+	.not-so-good-time {
+		background-color: #FFEC8B;
+	}
+	.sort-of-ok {
+		background-color: #BFEFFF;
+	}
+	.good-time {
+		background-color: #C1FFC1;
+	}
+
+	.no-tests {
+		text-decoration: line-through;
+		text-decoration-style: double;
+	}
+	.error-detail-type, .fail-detail-type {
+		padding-left: 2em;
+		font-weight: bold;
+	}
+	.error-detail-detail, .fail-detail-detail {
+		padding-left: 4em;
+		white-space: pre-wrap;
+		padding-bottom: 1em;
+	}
+	.backlink {
+		text-align: right;
+		font-size: 80%;
+	}
+	.backlink span {
+		font-size: 140%;
+	}
+	</style>
+</head>
+<body>
+<div>
+<h2>Test Totals: </h2>
+<table id="high-level">
+<tr>
+<td><b>Number of Tests:</b></td>
+<td>2</td>
+</tr>
+<tr>
+<td><b>Number of Assertions:</b></td>
+<td>2</td>
+</tr>
+<tr>
+<td><b>Number of Failures:</b></td>
+<td>0</td>
+</tr>
+<tr>
+<td><b>Number of Errors:</b></td>
+<td>0</td>
+</tr>
+<tr>
+<td><b>Execution Time:</b></td>
+<td>0.093042</td>
+</tr>
+</table>
+</div>
+<h3>Summary</h3>
+<table id="summary">
+<tr class="top">
+<th>Name</th>
+<th>Tests</th>
+<th>Assertions</th>
+<th>Failures</th>
+<th>Errors</th>
+<th>Execution Time</th>
+</tr>
+<tr class="test-file">
+<th>Unit</th>
+<td class="nr pass">1</td>
+<td class="nr pass">1</td>
+<td class="nr pass">0</td>
+<td class="nr pass">0</td>
+<td class="time good-time">0.001604</td>
+</tr>
+<tr class="single-test">
+<th><a href="#Tests%5CUnit%5CExampleTest">Tests\Unit\ExampleTest</a></th>
+<td class="nr pass">1</td>
+<td class="nr pass">1</td>
+<td class="nr pass">0</td>
+<td class="nr pass">0</td>
+<td class="time good-time">0.001604</td>
+</tr>
+<tr class="test-file">
+<th>Feature</th>
+<td class="nr pass">1</td>
+<td class="nr pass">1</td>
+<td class="nr pass">0</td>
+<td class="nr pass">0</td>
+<td class="time good-time">0.091437</td>
+</tr>
+<tr class="single-test">
+<th><a href="#Tests%5CFeature%5CExampleTest">Tests\Feature\ExampleTest</a></th>
+<td class="nr pass">1</td>
+<td class="nr pass">1</td>
+<td class="nr pass">0</td>
+<td class="nr pass">0</td>
+<td class="time good-time">0.091437</td>
+</tr>
+</table>
+</body>
+</html>
