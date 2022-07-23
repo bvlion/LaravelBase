@@ -46,6 +46,7 @@ jobs:
           cd src
           docker run --rm --interactive --volume $PWD:/app composer install
           cd ..
+          cp .env src/.
 
       - name: docker start
         run: docker-compose up --build -d web db
