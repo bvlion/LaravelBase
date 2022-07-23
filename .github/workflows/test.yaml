@@ -1,0 +1,83 @@
+name: test
+
+on:
+  push:
+    branches:
+      - 'main'
+  pull_request:
+    branches:
+      - 'main'
+  pull_request_target:
+    branches:
+      - 'main'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    if: |
+      (github.event_name == 'pull_request_target' && github.actor == 'dependabot[bot]') ||
+      (github.event_name != 'pull_request_target' && github.actor != 'dependabot[bot]')
+    steps:
+      - name: checkout
+        if: ${{ github.event_name != 'pull_request_target' }}
+        uses: actions/checkout@v2
+        
+      - name: Checkout PR
+        if: ${{ github.event_name == 'pull_request_target' }}
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: setup
+        run: cp .env src/.
+
+      - name: cache vendor
+        id: cache
+        uses: actions/cache@v1
+        with:
+          path: ./src/vendor
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
+
+      - name: composer install
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: |
+          cd src
+          docker run --rm --interactive --volume $PWD:/app composer install
+          cd ..
+
+      - name: docker start
+        run: docker-compose up --build -d web db
+
+      - name: wait start db
+        run: docker-compose up --build db-check
+
+      - name: test data insert
+        run: docker-compose exec -T web php artisan db:seed
+
+      - name: test
+        run: |
+          docker-compose exec -T web php artisan test --log-junit result.xml
+          curl -o lib/phpunit.xslt https://gist.githubusercontent.com/jrfnl/3c28ea6d9b07fd48656d/raw/aaeb0b879647b1cf1dbfd461a2c4a8e292be738d/phpunit.xslt
+          mkdir report
+          php lib/convert_html.php
+
+      - name: Docker stop
+        run: docker-compose stop
+
+      - name: upload test report
+        uses: JamesIves/github-pages-deploy-action@4.0.0
+        with:
+          branch: gh-pages
+          folder: report
+          uses: actions/upload-artifact@v2
+
+      - name: slack notification
+        uses: 8398a7/action-slack@v3
+        if: always()
+        with:
+          status: ${{ job.status }}
+          fields: repo,message,action,took
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}

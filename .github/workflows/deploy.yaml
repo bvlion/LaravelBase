@@ -1,0 +1,59 @@
+name: deploy
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+
+      - name: export ssh keys
+        run: |
+          mkdir -p ~/.ssh
+          echo -e "${{ secrets.ID_RSA }}" > ~/.ssh/id_rsa
+          echo ${{ secrets.KNOWN_HOSTS }} > ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/id_rsa
+
+      - name: cache vendor
+        id: cache
+        uses: actions/cache@v1
+        with:
+          path: ./src/vendor
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
+
+      - name: composer install
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: |
+          cd src
+          docker run --rm --interactive --tty --volume $PWD:/app composer install
+          cd ..
+
+      - name: delete server files
+        run: |
+          ssh -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} \
+             "cd ${{ secrets.SSH_DIR }} && ls | grep -v -E 'logs' | xargs rm -rf"
+
+      - name: rsync
+        run: |
+          cd src && rsync -av \
+            -e "ssh -p ${{ secrets.SSH_PORT }}" \
+            --exclude='logs' \
+            --exclude='phpunit.xml' \
+            --exclude='.env' \
+            --exclude='tests' \
+            . ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.SSH_DIR }}
+
+      - name: Slack Notification
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          fields: repo,message,action,took
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}

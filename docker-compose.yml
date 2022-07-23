@@ -1,0 +1,40 @@
+version: '3.3'
+services:
+  web:
+    container_name: b2_web
+    build: ./docker/web
+    ports:
+      - 8000:80
+    tty: true
+    stdin_open: true
+    volumes:
+      - ./src:/var/www/html
+      - ./docker/web/php.ini:/usr/local/etc/php/php.ini
+      - ./src/logs:/var/log/apache2
+    depends_on:
+      - db
+
+  db:
+    container_name: b2_db
+    build: ./docker/db
+    restart: always
+    environment:
+      TZ: Asia/Tokyo
+      MYSQL_DATABASE: b2
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: rootpassword
+    ports:
+      - "3346:3306"
+    volumes:
+      - ./docker/db/conf:/etc/mysql
+      - ./src/logs:/var/log/mysql
+      - ./docker/db/sql:/docker-entrypoint-initdb.d
+
+  db-check:
+    container_name: db_ckecker
+    build: ./docker/checker
+    environment:
+      TZ: Asia/Tokyo
+      MYSQL_ROOT_PASSWORD: rootpassword
+    command: /wait-for-it.sh b2_db:3306 --timeout=30 --strict -- mysqladmin ping -h db -u root -prootpassword

@@ -1,0 +1,13 @@
+/src/public/hot
+/src/public/storage
+/src/storage/*.key
+/src/vendor
+/src/.phpunit.result.cache
+docker-compose.override.yml
+/src/logs/*
+!/src/logs/.gitkeep
+google_client_secret
+report
+src/result.xml
+lib/phpunit.xslt
+src/.env
