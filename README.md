@@ -6,7 +6,7 @@ cd src && docker run --rm --interactive --tty --volume $PWD:/app composer instal
 docker compose up --build -d web db
 ```
 
-change `b2_web` and all `b2_db`
+change `b2_web` , `LaravelBase` and all `b2_db`
 
 
 ### note
